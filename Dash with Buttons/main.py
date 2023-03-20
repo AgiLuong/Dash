@@ -1,28 +1,20 @@
-from typing import Set
-import kivy
-import time
-import threading
 import os
-import queue
-from kivy.app import App
-from kivy.uix.button import Button
-from kivy.uix.label import Label
-from kivy.uix.widget import Widget
-from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.boxlayout import BoxLayout
-from kivy import Config
-from kivy.clock import Clock, ClockBaseBehavior
-from kivy.animation import Animation
-from kivy.properties import (ObjectProperty, NumericProperty,
-                             StringProperty, BooleanProperty)
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.lang import Builder
-from kivy.uix.screenmanager import NoTransition
-from kivy.base import runTouchApp
-import can
-from gpiozero import LED as gpioLED
-from gpiozero import Button as gpioButton
+import struct
+import threading
+import time
 from enum import Enum
+
+import can
+from gpiozero import Button as gpioButton
+from gpiozero import LED as gpioLED
+from kivy import Config
+from kivy.app import App
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.properties import (NumericProperty,
+                             StringProperty, BooleanProperty)
+from kivy.uix.screenmanager import NoTransition
+from kivy.uix.screenmanager import ScreenManager, Screen
 
 
 class Button_Enum(Enum):
@@ -46,72 +38,72 @@ class inputManager:
 
     def buttonEnterPressed(self):
         global isPressed
-        global led
+        # global led
         if isPressed == Button_Enum.BLANK:
             isPressed = Button_Enum.ENTER
-            led.on()
+            # led.on()
             main.kivy_manager.key_down(Button_Enum.ENTER)
 
     def buttonEnterReleased(self):
         global isPressed
-        global led
+        # global led
         if isPressed == Button_Enum.ENTER:
-            led.off()
+            # led.off()
             main.kivy_manager.key_up(Button_Enum.ENTER)
             isPressed = Button_Enum.BLANK
 
     def buttonRightPressed(self):
         global isPressed
-        global led
+        # global led
         if isPressed == Button_Enum.BLANK:
             isPressed = Button_Enum.RIGHT
             main.kivy_manager.key_down(Button_Enum.RIGHT)
 
     def buttonRightReleased(self):
         global isPressed
-        global led
+        # global led
         if isPressed == Button_Enum.RIGHT:
             main.kivy_manager.key_up(Button_Enum.RIGHT)
             isPressed = Button_Enum.BLANK
 
     def buttonLeftPressed(self):
         global isPressed
-        global led
+        # global led
         if isPressed == Button_Enum.BLANK:
             isPressed = Button_Enum.LEFT
             main.kivy_manager.key_down(Button_Enum.LEFT)
 
     def buttonLeftReleased(self):
         global isPressed
-        global led
+        # global led
         if isPressed == Button_Enum.LEFT:
             main.kivy_manager.key_up(Button_Enum.LEFT)
             isPressed = Button_Enum.BLANK
 
     def buttonUpPressed(self):
         global isPressed
-        global led
+        # global led
         if isPressed == Button_Enum.BLANK:
             isPressed = Button_Enum.UP
             main.kivy_manager.key_down(Button_Enum.UP)
 
     def buttonUpReleased(self):
         global isPressed
-        global led
+        # global led
         if isPressed == Button_Enum.UP:
             main.kivy_manager.key_up(Button_Enum.UP)
             isPressed = Button_Enum.BLANK
 
     def buttonDownPressed(self):
         global isPressed
-        global led
+        # global led
         if isPressed == Button_Enum.BLANK:
             isPressed = Button_Enum.DOWN
             main.kivy_manager.key_down(Button_Enum.DOWN)
 
     def buttonDownReleased(self):
         global isPressed
-        global led
+        # global led
         if isPressed == Button_Enum.DOWN:
             main.kivy_manager.key_up(Button_Enum.DOWN)
             isPressed = Button_Enum.BLANK
@@ -141,90 +133,102 @@ class kivyScreenManager:
             self.screen_obj = MainScreen
         elif name == 'SuspensionScreen':
             self.current_screen = 'SuspensionScreen'
-            self.screen_obj =SuspensionScreen
+            self.screen_obj = SuspensionScreen
         elif name == 'BrakeScreen':
             self.current_screen = 'BrakeScreen'
-            self.screen_obj =BrakeScreen
+            self.screen_obj = BrakeScreen
         elif name == 'TrackScreen':
             self.current_screen = 'TrackScreen'
-            self.screen_obj =TrackScreen
+            self.screen_obj = TrackScreen
         elif name == 'DriveModeScreen':
             self.current_screen = 'DriveModeScreen'
-            self.screen_obj =DriveModeScreen
+            self.screen_obj = DriveModeScreen
         elif name == 'SettingsScreen':
             self.current_screen = 'SettingsScreen'
-            self.screen_obj =SettingsScreen
+            self.screen_obj = SettingsScreen
         elif name == 'SetupScreen':
             self.current_screen = 'SetupScreen'
-            self.screen_obj =SetupScreen
+            self.screen_obj = SetupScreen
         screens.current = self.current_screen
-        self.screen_obj.ids[self.screen_obj.button_keys[self.screen_obj.selected_pos[0]][self.screen_obj.selected_pos[1]]].state = 'down'
+        self.screen_obj.ids[self.screen_obj.button_keys[self.screen_obj.selected_pos[0]][
+            self.screen_obj.selected_pos[1]]].state = 'down'
 
     def key_down(self, direction):
         pass
 
     def key_up(self, direction, *kwargs):
         if self.current_screen == 'MainScreen':
-            self.screen_key_event(direction=direction,screen_obj=MainScreen)
+            self.screen_key_event(direction=direction, screen_obj=MainScreen)
         elif self.current_screen == 'SuspensionScreen':
-            self.screen_key_event(direction=direction,screen_obj=SuspensionScreen)
+            self.screen_key_event(direction=direction, screen_obj=SuspensionScreen)
         elif self.current_screen == 'BrakeScreen':
-            self.screen_key_event(direction=direction,screen_obj=BrakeScreen)
+            self.screen_key_event(direction=direction, screen_obj=BrakeScreen)
         elif self.current_screen == 'TrackScreen':
-            self.screen_key_event(direction=direction,screen_obj=TrackScreen)
+            self.screen_key_event(direction=direction, screen_obj=TrackScreen)
         elif self.current_screen == 'DriveModeScreen':
-            self.screen_key_event(direction=direction,screen_obj=DriveModeScreen)
+            self.screen_key_event(direction=direction, screen_obj=DriveModeScreen)
         elif self.current_screen == 'SettingsScreen':
-            self.screen_key_event(direction=direction,screen_obj=SettingsScreen)
+            self.screen_key_event(direction=direction, screen_obj=SettingsScreen)
         elif self.current_screen == 'SetupScreen':
-            self.screen_key_event(direction=direction,screen_obj=SetupScreen)
+            self.screen_key_event(direction=direction, screen_obj=SetupScreen)
 
-    def screen_key_event(self,direction,screen_obj):
+    def screen_key_event(self, direction, screen_obj):
         if direction == Button_Enum.RIGHT:
-            if len(screen_obj.button_keys[screen_obj.selected_pos[0]]) > screen_obj.selected_pos[1] +1: # if it can move right
-                screen_obj.ids[screen_obj.button_keys[screen_obj.selected_pos[0]][screen_obj.selected_pos[1]]].state = 'normal'
+            if len(screen_obj.button_keys[screen_obj.selected_pos[0]]) > screen_obj.selected_pos[
+                1] + 1:  # if it can move right
+                screen_obj.ids[
+                    screen_obj.button_keys[screen_obj.selected_pos[0]][screen_obj.selected_pos[1]]].state = 'normal'
                 screen_obj.selected_pos[1] += 1
-            else: # Cannot move right
-                screen_obj.ids[screen_obj.button_keys[screen_obj.selected_pos[0]][screen_obj.selected_pos[1]]].state = 'normal'
+            else:  # Cannot move right
+                screen_obj.ids[
+                    screen_obj.button_keys[screen_obj.selected_pos[0]][screen_obj.selected_pos[1]]].state = 'normal'
                 screen_obj.selected_pos[1] = 0
 
         elif direction == Button_Enum.LEFT:
-            if 0 <= screen_obj.selected_pos[1]-1: # if it can move Left
-                screen_obj.ids[screen_obj.button_keys[screen_obj.selected_pos[0]][screen_obj.selected_pos[1]]].state = 'normal'
+            if 0 <= screen_obj.selected_pos[1] - 1:  # if it can move Left
+                screen_obj.ids[
+                    screen_obj.button_keys[screen_obj.selected_pos[0]][screen_obj.selected_pos[1]]].state = 'normal'
                 screen_obj.selected_pos[1] -= 1
-            else: # Cannot move Left
-                screen_obj.ids[screen_obj.button_keys[screen_obj.selected_pos[0]][screen_obj.selected_pos[1]]].state = 'normal'
+            else:  # Cannot move Left
+                screen_obj.ids[
+                    screen_obj.button_keys[screen_obj.selected_pos[0]][screen_obj.selected_pos[1]]].state = 'normal'
                 screen_obj.selected_pos[1] = len(screen_obj.button_keys[screen_obj.selected_pos[0]]) - 1
 
         elif direction == Button_Enum.UP:
-            if 0 <= screen_obj.selected_pos[0] - 1: # if it can move Up
-                screen_obj.ids[screen_obj.button_keys[screen_obj.selected_pos[0]][screen_obj.selected_pos[1]]].state = 'normal'
+            if 0 <= screen_obj.selected_pos[0] - 1:  # if it can move Up
+                screen_obj.ids[
+                    screen_obj.button_keys[screen_obj.selected_pos[0]][screen_obj.selected_pos[1]]].state = 'normal'
                 screen_obj.selected_pos[0] -= 1
-            else: # Cannot move Up
-                screen_obj.ids[screen_obj.button_keys[screen_obj.selected_pos[0]][screen_obj.selected_pos[1]]].state = 'normal'
+            else:  # Cannot move Up
+                screen_obj.ids[
+                    screen_obj.button_keys[screen_obj.selected_pos[0]][screen_obj.selected_pos[1]]].state = 'normal'
                 screen_obj.selected_pos[0] = len(screen_obj.button_keys) - 1
-            while len(screen_obj.button_keys[screen_obj.selected_pos[0]])-1 < screen_obj.selected_pos[1]:
+            while len(screen_obj.button_keys[screen_obj.selected_pos[0]]) - 1 < screen_obj.selected_pos[1]:
                 screen_obj.selected_pos[1] -= 1
 
         elif direction == Button_Enum.DOWN:
-            if len(screen_obj.button_keys)-1 >= screen_obj.selected_pos[0]+1: # if it can move Down
-                screen_obj.ids[screen_obj.button_keys[screen_obj.selected_pos[0]][screen_obj.selected_pos[1]]].state = 'normal'
+            if len(screen_obj.button_keys) - 1 >= screen_obj.selected_pos[0] + 1:  # if it can move Down
+                screen_obj.ids[
+                    screen_obj.button_keys[screen_obj.selected_pos[0]][screen_obj.selected_pos[1]]].state = 'normal'
                 screen_obj.selected_pos[0] += 1
-            else: # Cannot move Down
-                screen_obj.ids[screen_obj.button_keys[screen_obj.selected_pos[0]][screen_obj.selected_pos[1]]].state = 'normal'
+            else:  # Cannot move Down
+                screen_obj.ids[
+                    screen_obj.button_keys[screen_obj.selected_pos[0]][screen_obj.selected_pos[1]]].state = 'normal'
                 screen_obj.selected_pos[0] = 0
-            while len(screen_obj.button_keys[screen_obj.selected_pos[0]])-1 < screen_obj.selected_pos[1]:
+            while len(screen_obj.button_keys[screen_obj.selected_pos[0]]) - 1 < screen_obj.selected_pos[1]:
                 screen_obj.selected_pos[1] -= 1
 
         elif direction == Button_Enum.ENTER:
-            screen_obj.ids[screen_obj.button_keys[screen_obj.selected_pos[0]][screen_obj.selected_pos[1]]].trigger_action()
-            self.Clear_button_row(screen_obj.button_keys[screen_obj.selected_pos[0]],screen_obj=screen_obj)
+            screen_obj.ids[
+                screen_obj.button_keys[screen_obj.selected_pos[0]][screen_obj.selected_pos[1]]].trigger_action()
+            self.Clear_button_row(screen_obj.button_keys[screen_obj.selected_pos[0]], screen_obj=screen_obj)
 
-        screen_obj.ids[screen_obj.button_keys[screen_obj.selected_pos[0]][screen_obj.selected_pos[1]]].state = 'down'        
-    
-    def Clear_button_row(self,array,screen_obj):
+        screen_obj.ids[screen_obj.button_keys[screen_obj.selected_pos[0]][screen_obj.selected_pos[1]]].state = 'down'
+
+    def Clear_button_row(self, array, screen_obj):
         for x in array:
-            screen_obj.ids[x].background_color = (1,1,1,1)
+            screen_obj.ids[x].background_color = (1, 1, 1, 1)
+
 
 Config.set('graphics', 'width', 1920)
 Config.set('graphics', 'height', 1080)
@@ -318,9 +322,10 @@ global_decel_ramp_ang = 00
 global_tune1 = -1
 global_tune2 = -1
 
+
 class MainScreen(Screen):
-    selected_pos = [0,0] # y,x
-    button_keys = [['Drive_Mode','Brake','Suspension','Track','Setup']]
+    selected_pos = [0, 0]  # y,x
+    button_keys = [['Drive_Mode', 'Brake', 'Suspension', 'Track', 'Setup']]
 
     # Screen variables
     rpm = NumericProperty(0)
@@ -348,8 +353,9 @@ class MainScreen(Screen):
     BSEA_status = BooleanProperty(False)
     APPSA_status = BooleanProperty(False)
 
+
 class SuspensionScreen(Screen):
-    selected_pos = [0,0] # y,x
+    selected_pos = [0, 0]  # y,x
     button_keys = [['Return']]
 
     # Screen variables
@@ -359,8 +365,9 @@ class SuspensionScreen(Screen):
     rear_roll = NumericProperty(0.0)
     steering_angle = NumericProperty(0)
 
+
 class BrakeScreen(Screen):
-    selected_pos = [0,0] # y,x
+    selected_pos = [0, 0]  # y,x
     button_keys = [['Return']]
 
     # Screen variables
@@ -369,36 +376,42 @@ class BrakeScreen(Screen):
     brake_temperature = NumericProperty(0.0)
     brake_ratio_text = StringProperty(':')
 
+
 class TrackScreen(Screen):
-    selected_pos = [0,0] # y,x
-    button_keys = [['Return','Set_Beacon']]
+    selected_pos = [0, 0]  # y,x
+    button_keys = [['Return', 'Set_Beacon']]
 
     current_latitude = NumericProperty(0.0000000)
     current_longitude = NumericProperty(0.0000000)
     beacon_latitude = NumericProperty(0.0000000)
     beacon_longitude = NumericProperty(0.0000000)
 
+
 class SettingsScreen(Screen):
-    selected_pos = [2,0] # y,x
-    button_keys = [['Launch_Terminal'],['Restart_Dash'],['Return']]
+    selected_pos = [2, 0]  # y,x
+    button_keys = [['Launch_Terminal'], ['Restart_Dash'], ['Return']]
 
     ip_address = StringProperty('IP: ')
 
+
 class DriveModeScreen(Screen):
-    selected_pos = [5,0] # y,x
-    button_keys = [['Gearbox_Manual','Gearbox_Auto','Gearbox_Drag'],
-                    ['Launch_D','Launch_OFF','Launch_1','Launch_2','Launch_3','Launch_4','Launch_5','Launch_6','Launch_7','Launch_8','Launch_9'],
-                    ['Traction_D','Traction_OFF','Traction_1','Traction_2','Traction_3','Traction_4','Traction_5','Traction_6','Traction_7','Traction_8','Traction_9'],
-                    ['Throttle_Normal','Throttle_Normal2','Throttle_Skipad','Throttle_Drag'],
-                    ['Fuel_A','Fuel_B','Fuel_C','Fuel_D'],
-                    ['Return']]
+    selected_pos = [5, 0]  # y,x
+    button_keys = [['Gearbox_Manual', 'Gearbox_Auto', 'Gearbox_Drag'],
+                   ['Launch_D', 'Launch_OFF', 'Launch_1', 'Launch_2', 'Launch_3', 'Launch_4', 'Launch_5', 'Launch_6',
+                    'Launch_7', 'Launch_8', 'Launch_9'],
+                   ['Traction_D', 'Traction_OFF', 'Traction_1', 'Traction_2', 'Traction_3', 'Traction_4', 'Traction_5',
+                    'Traction_6', 'Traction_7', 'Traction_8', 'Traction_9'],
+                   ['Throttle_Normal', 'Throttle_Normal2', 'Throttle_Skipad', 'Throttle_Drag'],
+                   ['Fuel_A', 'Fuel_B', 'Fuel_C', 'Fuel_D'],
+                   ['Return']]
 
     front_ride_height = NumericProperty(0.0)
     rear_ride_height = NumericProperty(0.0)
 
+
 class SetupScreen(Screen):
-    selected_pos = [0,0] # y,x
-    button_keys = [['Return','Tires','Heave','Roll','Diff']]
+    selected_pos = [0, 0]  # y,x
+    button_keys = [['Return', 'Tires', 'Heave', 'Roll', 'Diff']]
 
     front_right_tire_pressure = NumericProperty(99.9)
     front_right_cam = NumericProperty(9.9)
@@ -444,6 +457,7 @@ class SetupScreen(Screen):
     accel_ramp_ang = NumericProperty(99)
     decel_ramp_ang = NumericProperty(99)
 
+
 class TireScreen(Screen):
     pass
 
@@ -487,219 +501,219 @@ HeaveScreen = screens.get_screen('HeaveScreen')
 RollScreen = screens.get_screen('RollScreen')
 DiffScreen = screens.get_screen('DiffScreen')
 
-
-CanBus = can.ThreadSafeBus(interface='socketcan', channel='can0', bitrate=1000000)  # TODO
+# CanBus = can.ThreadSafeBus(interface='socketcan', channel='can0', bitrate=1000000)  # TODO
 
 running_flag = True
 
+# def CANComm():
+#
+#     global global_rpm
+#     global global_speed
+#     global global_gear
+#     global global_coolant_temperature
+#     global global_head_temperature
+#     global global_coolant_pressure
+#     global global_lambda_value
+#     global global_oil_temperature
+#     global global_oil_pressure
+#     global global_battery_voltage
+#     global global_fuel_pressure
+#     global global_throttle_percent
+#     global global_clutch_percent
+#     global global_brake_percent
+#     global global_odo
+#     global global_tune_mode
+#     global global_BOTS_status
+#     global global_BSE_status
+#     global global_BSPD_status
+#     global global_TPS_status
+#     global global_APPS_status
+#     global global_front_heave
+#     global global_front_roll
+#     global global_rear_heave
+#     global global_rear_roll
+#     global global_steering_angle
+#     global global_front_brake_pressure
+#     global global_rear_brake_pressure
+#     global global_brake_temperature
+#     global global_brake_ratio_text
+#
+#     # Setup Screen Variables
+#     global global_front_right_tire_pressure
+#     global global_front_right_cam
+#     global global_front_right_toe
+#     global global_front_right_press
+#     global global_front_left_tire_pressure
+#     global global_front_left_cam
+#     global global_front_left_toe
+#     global global_front_left_press
+#     global global_rear_right_tire_pressure
+#     global global_rear_right_cam
+#     global global_rear_right_toe
+#     global global_rear_right_press
+#     global global_rear_left_tire_pressure
+#     global global_rear_left_cam
+#     global global_rear_left_toe
+#     global global_rear_left_press
+#     global global_front_heave
+#     global global_front_heave_lsr
+#     global global_front_heave_lsc
+#     global global_front_heave_hsr
+#     global global_front_roll
+#     global global_front_roll_lsr
+#     global global_front_roll_lsc
+#     global global_front_roll_hsr
+#     global global_rear_heave
+#     global global_rear_heave_lsr
+#     global global_rear_heave_lsc
+#     global global_rear_heave_hsr
+#     global global_rear_roll
+#     global global_rear_roll_lsr
+#     global global_rear_roll_lsc
+#     global global_rear_roll_hsr
+#     global global_diff_preload
+#     global global_accel_ramp_ang
+#     global global_decel_ramp_ang
+#     global global_tune1
+#     global global_tune2
+#     global global_BSEA_status #added 5-23-21
+#     global global_APPSA_status #added 5-23-21
+#
+#
+#     BYTEORDER_CONSTANT = 'big'
+#
+#     while running_flag:
+#
+#         try:
+#
+#             msg = CanBus.recv(timeout=0.5)
+#
+#             if msg != None:  # msg is not None:
+#
+#                 if msg.arbitration_id == 0x100:
+#                     if screens.current_screen == MainScreen:
+#                         global_rpm = int.from_bytes(msg.data[0:2], byteorder=BYTEORDER_CONSTANT, signed=False)
+#                         global_gear = int.from_bytes(msg.data[2:3], byteorder=BYTEORDER_CONSTANT, signed=False)
+#                         global_speed = int.from_bytes(msg.data[3:4], byteorder=BYTEORDER_CONSTANT, signed=False)
+#                         global_throttle_percent = int.from_bytes(msg.data[4:5], byteorder=BYTEORDER_CONSTANT, signed=False)
+#                         global_clutch_percent = int.from_bytes(msg.data[6:7], byteorder=BYTEORDER_CONSTANT, signed=False)
+#                     elif screens.current_screen == SuspensionScreen:
+#                         global_steering_angle = int.from_bytes(msg.data[5:6], byteorder=BYTEORDER_CONSTANT, signed=True)
+#
+#                 elif msg.arbitration_id == 0x101:
+#                     global_front_brake_pressure = int.from_bytes(msg.data[0:2], byteorder=BYTEORDER_CONSTANT, signed=False) / 10.0
+#                     global_rear_brake_pressure = int.from_bytes(msg.data[2:4], byteorder=BYTEORDER_CONSTANT, signed=False) / 10.0
+#                     global_fuel_pressure = int.from_bytes(msg.data[4:6], byteorder=BYTEORDER_CONSTANT, signed=False) / 10.0
+#                     global_oil_pressure = int.from_bytes(msg.data[6:8], byteorder=BYTEORDER_CONSTANT, signed=False) / 10.0
+#
+#                     if screens.current_screen == MainScreen:
+#                         brake_percent_calculation = max(global_front_brake_pressure, global_rear_brake_pressure) / 10.0
+#                         global_brake_percent = brake_percent_calculation if brake_percent_calculation < 100 else 100
+#                     elif screens.current_screen == BrakeScreen:
+#                         total_brake_pressure = BrakeScreen.front_brake_pressure + BrakeScreen.rear_brake_pressure
+#                         if (total_brake_pressure > 0):
+#                             global_brake_ratio_text = str(round(BrakeScreen.front_brake_pressure*100.0/total_brake_pressure, 1)) + ' : ' + str(round(BrakeScreen.rear_brake_pressure*100.0/total_brake_pressure, 1))
+#                         else:
+#                             global_brake_ratio_text = ':'
+#
+#                 elif msg.arbitration_id == 0x102:
+#                     global_coolant_temperature = int.from_bytes(msg.data[0:2], byteorder=BYTEORDER_CONSTANT, signed=True) / 10.0
+#                     global_head_temperature = int.from_bytes(msg.data[2:4], byteorder=BYTEORDER_CONSTANT, signed=True) / 10.0
+#                     global_brake_temperature = int.from_bytes(msg.data[4:6], byteorder=BYTEORDER_CONSTANT, signed=True) / 10.0
+#                     global_battery_voltage = int.from_bytes(msg.data[6:7], byteorder=BYTEORDER_CONSTANT, signed=False) / 10.0
+#                     global_lambda_value = int.from_bytes(msg.data[7:8], byteorder=BYTEORDER_CONSTANT, signed=False) / 100.0
+#
+#                 elif msg.arbitration_id == 0x103:
+#                     global_front_heave = int.from_bytes(msg.data[0:2], byteorder=BYTEORDER_CONSTANT, signed=True) / 10.0
+#                     global_rear_heave = int.from_bytes(msg.data[2:4], byteorder=BYTEORDER_CONSTANT, signed=True) / 10.0
+#                     global_front_roll = int.from_bytes(msg.data[4:6], byteorder=BYTEORDER_CONSTANT, signed=True) / 10.0
+#                     global_rear_roll = int.from_bytes(msg.data[6:8], byteorder=BYTEORDER_CONSTANT, signed=True) / 10.0
+#
+#                 elif msg.arbitration_id == 0x104:
+#                     global_odo = int.from_bytes(msg.data[0:2], byteorder=BYTEORDER_CONSTANT, signed=False)
+#                     status = int.from_bytes(msg.data[2:3], byteorder=BYTEORDER_CONSTANT, signed=False)
+#                     global_BOTS_status = status & 0b10000000
+#                     global_BSE_status = status & 0b01000000
+#                     global_BSPD_status = status & 0b00100000
+#                     global_TPS_status = status & 0b00010000
+#                     global_APPS_status = status & 0b00001000
+#                     global_BSEA_status = status & 0b00000100 #added BAGR
+#                     global_APPSA_status = status & 0b00000010 #added AAGR
+#                     global_tune1 =  int.from_bytes(msg.data[3:4], byteorder = BYTEORDER_CONSTANT, signed = False) #added
+#                     global_tune2 = status & 0b00000001 #added changed
+#
+#                     if global_tune1 == 0:
+#                         global_tune_mode = 'F'
+#                     elif global_tune1 == 1:
+#                         global_tune_mode = 'M'
+#                     elif global_tune1 == 2:
+#                         if global_tune2 == 0:
+#                             global_tune_mode = 'A'
+#                         elif global_tune2 == 1:
+#                             global_tune_mode = 'D'
+#                         else:
+#                             global_tune_mode = 'F2'
+#
+#         except:  # Whats giving the error
+#             pass
 
-def CANComm():
 
-    global global_rpm
-    global global_speed
-    global global_gear
-    global global_coolant_temperature
-    global global_head_temperature
-    global global_coolant_pressure
-    global global_lambda_value
-    global global_oil_temperature
-    global global_oil_pressure
-    global global_battery_voltage
-    global global_fuel_pressure
-    global global_throttle_percent
-    global global_clutch_percent
-    global global_brake_percent
-    global global_odo
-    global global_tune_mode
-    global global_BOTS_status
-    global global_BSE_status
-    global global_BSPD_status
-    global global_TPS_status
-    global global_APPS_status
-    global global_front_heave
-    global global_front_roll
-    global global_rear_heave
-    global global_rear_roll
-    global global_steering_angle
-    global global_front_brake_pressure
-    global global_rear_brake_pressure
-    global global_brake_temperature
-    global global_brake_ratio_text
-
-    # Setup Screen Variables
-    global global_front_right_tire_pressure
-    global global_front_right_cam
-    global global_front_right_toe
-    global global_front_right_press
-    global global_front_left_tire_pressure
-    global global_front_left_cam
-    global global_front_left_toe
-    global global_front_left_press
-    global global_rear_right_tire_pressure
-    global global_rear_right_cam
-    global global_rear_right_toe
-    global global_rear_right_press
-    global global_rear_left_tire_pressure
-    global global_rear_left_cam
-    global global_rear_left_toe
-    global global_rear_left_press
-    global global_front_heave
-    global global_front_heave_lsr
-    global global_front_heave_lsc
-    global global_front_heave_hsr
-    global global_front_roll
-    global global_front_roll_lsr
-    global global_front_roll_lsc
-    global global_front_roll_hsr
-    global global_rear_heave
-    global global_rear_heave_lsr
-    global global_rear_heave_lsc
-    global global_rear_heave_hsr
-    global global_rear_roll
-    global global_rear_roll_lsr
-    global global_rear_roll_lsc
-    global global_rear_roll_hsr
-    global global_diff_preload
-    global global_accel_ramp_ang
-    global global_decel_ramp_ang
-    global global_tune1
-    global global_tune2
-    global global_BSEA_status #added 5-23-21
-    global global_APPSA_status #added 5-23-21
-    
-
-    BYTEORDER_CONSTANT = 'big'
-
-    while running_flag:
-
-        try:
-
-            msg = CanBus.recv(timeout=0.5)
-
-            if msg != None:  # msg is not None:
-
-                if msg.arbitration_id == 0x100:
-                    if screens.current_screen == MainScreen:
-                        global_rpm = int.from_bytes(msg.data[0:2], byteorder=BYTEORDER_CONSTANT, signed=False)
-                        global_gear = int.from_bytes(msg.data[2:3], byteorder=BYTEORDER_CONSTANT, signed=False)
-                        global_speed = int.from_bytes(msg.data[3:4], byteorder=BYTEORDER_CONSTANT, signed=False)
-                        global_throttle_percent = int.from_bytes(msg.data[4:5], byteorder=BYTEORDER_CONSTANT, signed=False)
-                        global_clutch_percent = int.from_bytes(msg.data[6:7], byteorder=BYTEORDER_CONSTANT, signed=False)
-                    elif screens.current_screen == SuspensionScreen:
-                        global_steering_angle = int.from_bytes(msg.data[5:6], byteorder=BYTEORDER_CONSTANT, signed=True)
-
-                elif msg.arbitration_id == 0x101:
-                    global_front_brake_pressure = int.from_bytes(msg.data[0:2], byteorder=BYTEORDER_CONSTANT, signed=False) / 10.0
-                    global_rear_brake_pressure = int.from_bytes(msg.data[2:4], byteorder=BYTEORDER_CONSTANT, signed=False) / 10.0
-                    global_fuel_pressure = int.from_bytes(msg.data[4:6], byteorder=BYTEORDER_CONSTANT, signed=False) / 10.0
-                    global_oil_pressure = int.from_bytes(msg.data[6:8], byteorder=BYTEORDER_CONSTANT, signed=False) / 10.0
-
-                    if screens.current_screen == MainScreen:
-                        brake_percent_calculation = max(global_front_brake_pressure, global_rear_brake_pressure) / 10.0
-                        global_brake_percent = brake_percent_calculation if brake_percent_calculation < 100 else 100
-                    elif screens.current_screen == BrakeScreen:
-                        total_brake_pressure = BrakeScreen.front_brake_pressure + BrakeScreen.rear_brake_pressure
-                        if (total_brake_pressure > 0):
-                            global_brake_ratio_text = str(round(BrakeScreen.front_brake_pressure*100.0/total_brake_pressure, 1)) + ' : ' + str(round(BrakeScreen.rear_brake_pressure*100.0/total_brake_pressure, 1))
-                        else:
-                            global_brake_ratio_text = ':'
-
-                elif msg.arbitration_id == 0x102:
-                    global_coolant_temperature = int.from_bytes(msg.data[0:2], byteorder=BYTEORDER_CONSTANT, signed=True) / 10.0
-                    global_head_temperature = int.from_bytes(msg.data[2:4], byteorder=BYTEORDER_CONSTANT, signed=True) / 10.0
-                    global_brake_temperature = int.from_bytes(msg.data[4:6], byteorder=BYTEORDER_CONSTANT, signed=True) / 10.0
-                    global_battery_voltage = int.from_bytes(msg.data[6:7], byteorder=BYTEORDER_CONSTANT, signed=False) / 10.0
-                    global_lambda_value = int.from_bytes(msg.data[7:8], byteorder=BYTEORDER_CONSTANT, signed=False) / 100.0
-
-                elif msg.arbitration_id == 0x103:
-                    global_front_heave = int.from_bytes(msg.data[0:2], byteorder=BYTEORDER_CONSTANT, signed=True) / 10.0
-                    global_rear_heave = int.from_bytes(msg.data[2:4], byteorder=BYTEORDER_CONSTANT, signed=True) / 10.0
-                    global_front_roll = int.from_bytes(msg.data[4:6], byteorder=BYTEORDER_CONSTANT, signed=True) / 10.0
-                    global_rear_roll = int.from_bytes(msg.data[6:8], byteorder=BYTEORDER_CONSTANT, signed=True) / 10.0
-
-                elif msg.arbitration_id == 0x104:
-                    global_odo = int.from_bytes(msg.data[0:2], byteorder=BYTEORDER_CONSTANT, signed=False)
-                    status = int.from_bytes(msg.data[2:3], byteorder=BYTEORDER_CONSTANT, signed=False)
-                    global_BOTS_status = status & 0b10000000
-                    global_BSE_status = status & 0b01000000
-                    global_BSPD_status = status & 0b00100000
-                    global_TPS_status = status & 0b00010000
-                    global_APPS_status = status & 0b00001000
-                    global_BSEA_status = status & 0b00000100 #added BAGR
-                    global_APPSA_status = status & 0b00000010 #added AAGR
-                    global_tune1 =  int.from_bytes(msg.data[3:4], byteorder = BYTEORDER_CONSTANT, signed = False) #added
-                    global_tune2 = status & 0b00000001 #added changed
-                    
-                    if global_tune1 == 0:
-                        global_tune_mode = 'F'
-                    elif global_tune1 == 1:
-                        global_tune_mode = 'M'
-                    elif global_tune1 == 2:
-                        if global_tune2 == 0:
-                            global_tune_mode = 'A'
-                        elif global_tune2 == 1:
-                            global_tune_mode = 'D'
-                        else:
-                            global_tune_mode = 'F2'
-
-        except:  # Whats giving the error
-            pass
-
-
-CANCommThread = threading.Thread(target=CANComm)
+# CANCommThread = threading.Thread(target=CANComm)
 
 isPressed = Button_Enum.BLANK
-led = gpioLED("board35")
-buttonEnter = gpioButton("board33")
-buttonLeft = gpioButton("board31")
-buttonRight = gpioButton("board37")
-buttonUp = gpioButton("board40")
-buttonDown = gpioButton("board38")
-buttonEnter.when_pressed = inputManager.buttonEnterPressed
-buttonEnter.when_released = inputManager.buttonEnterReleased
-buttonLeft.when_pressed = inputManager.buttonLeftPressed
-buttonLeft.when_released = inputManager.buttonLeftReleased
-buttonRight.when_pressed = inputManager.buttonRightPressed
-buttonRight.when_released = inputManager.buttonRightReleased
-buttonUp.when_pressed = inputManager.buttonUpPressed
-buttonUp.when_released = inputManager.buttonUpReleased
-buttonDown.when_pressed = inputManager.buttonDownPressed
-buttonDown.when_released = inputManager.buttonDownReleased
+
+
+# # led = gpioLED("board35")
+# buttonEnter = gpioButton("board33")
+# buttonLeft = gpioButton("board31")
+# buttonRight = gpioButton("board37")
+# buttonUp = gpioButton("board40")
+# buttonDown = gpioButton("board38")
+# buttonEnter.when_pressed = inputManager.buttonEnterPressed
+# buttonEnter.when_released = inputManager.buttonEnterReleased
+# buttonLeft.when_pressed = inputManager.buttonLeftPressed
+# buttonLeft.when_released = inputManager.buttonLeftReleased
+# buttonRight.when_pressed = inputManager.buttonRightPressed
+# buttonRight.when_released = inputManager.buttonRightReleased
+# buttonUp.when_pressed = inputManager.buttonUpPressed
+# buttonUp.when_released = inputManager.buttonUpReleased
+# buttonDown.when_pressed = inputManager.buttonDownPressed
+# buttonDown.when_released = inputManager.buttonDownReleased
 
 
 class main(App):
     kivy_manager = kivyScreenManager()
 
-    def sendCanMsg(self, func, msg_data):
-        
-        try:
-            if func == 'ThrottleMap':
-                msg = can.Message(arbitration_id = 0xFF, is_extended_id = False, data = [0,msg_data])
-                           
-            elif func == 'SetBeacon':  
-                msg = can.Message(arbitration_id = 0xFF, is_extended_id = False, data = [1])
-                
-            elif func == 'RideHeight':
-                msg = can.Message(arbitration_id = 0xFF, is_extended_id = False, data = [2] + list(struct.pack("!f", msg_data)))
-               
-            elif func == 'TractionSlipMap':
-                msg = can.Message(arbitration_id = 0xFF, is_extended_id = False, data = [3,msg_data])
-                
-            elif func == 'TractionRangeMap':
-                msg = can.Message(arbitration_id = 0xFF, is_extended_id = False, data = [4,msg_data])
-                
-            elif func == 'LaunchMap':
-                msg = can.Message(arbitration_id = 0xFF, is_extended_id = False, data = [5,msg_data]) 
-                
-            elif func == 'ShiftMode':
-                msg = can.Message(arbitration_id = 0xFF, is_extended_id = False, data = [6,msg_data])
-                
-            elif func == 'EngineMap':
-                msg = can.Message(arbitration_id = 0xFF, is_extended_id = False, data = [7,msg_data])    
-               
-            CanBus.send(msg)
-        except:
-            pass
+    # def sendCanMsg(self, func, msg_data):
+    #
+    #     try:
+    #         if func == 'ThrottleMap':
+    #             msg = can.Message(arbitration_id = 0xFF, is_extended_id = False, data = [0,msg_data])
+    #
+    #         elif func == 'SetBeacon':
+    #             msg = can.Message(arbitration_id = 0xFF, is_extended_id = False, data = [1])
+    #
+    #         elif func == 'RideHeight':
+    #             msg = can.Message(arbitration_id = 0xFF, is_extended_id = False, data = [2] + list(struct.pack("!f", msg_data)))
+    #
+    #         elif func == 'TractionSlipMap':
+    #             msg = can.Message(arbitration_id = 0xFF, is_extended_id = False, data = [3,msg_data])
+    #
+    #         elif func == 'TractionRangeMap':
+    #             msg = can.Message(arbitration_id = 0xFF, is_extended_id = False, data = [4,msg_data])
+    #
+    #         elif func == 'LaunchMap':
+    #             msg = can.Message(arbitration_id = 0xFF, is_extended_id = False, data = [5,msg_data])
+    #
+    #         elif func == 'ShiftMode':
+    #             msg = can.Message(arbitration_id = 0xFF, is_extended_id = False, data = [6,msg_data])
+    #
+    #         elif func == 'EngineMap':
+    #             msg = can.Message(arbitration_id = 0xFF, is_extended_id = False, data = [7,msg_data])
+    #
+    #         CanBus.send(msg)
+    #     except:
+    #         pass
 
     def stopApp(self):
         os._exit(0)
@@ -709,7 +723,9 @@ class main(App):
 
     def updateIpAddress(self, *args):
         try:
-            SettingsScreen.ip_address = "IP: " + os.popen('ip addr show wlan0').read().split("inet ")[1].split("/")[0]  # TODO uncomment later.
+            SettingsScreen.ip_address = "IP: " + \
+                                        os.popen('/sbin/ip addr show wlan0').read().split("inet ")[1].split("/")[
+                                            0]  # TODO uncomment later.
         except:  # Whats giving the error
             pass
 
@@ -736,8 +752,8 @@ class main(App):
             MainScreen.BSPD_status = global_BSPD_status
             MainScreen.TPS_status = global_TPS_status
             MainScreen.APPS_status = global_APPS_status
-            MainScreen.APPSA_status = global_APPSA_status #added 5-22-21
-            MainScreen.BSEA_status = global_BSEA_status #added 5-22-21
+            MainScreen.APPSA_status = global_APPSA_status  # added 5-22-21
+            MainScreen.BSEA_status = global_BSEA_status  # added 5-22-21
 
         elif screens.current_screen == SuspensionScreen:
             SuspensionScreen.front_heave = global_front_heave
@@ -805,7 +821,7 @@ class main(App):
         Clock.schedule_interval(self.updateTime, 1)
         Clock.schedule_interval(self.updateIpAddress, 3)
         Clock.schedule_interval(self.updateScreen, 0.02)
-        CANCommThread.start()
+        # CANCommThread.start()
 
     def on_stop(self):
         global running_flag
