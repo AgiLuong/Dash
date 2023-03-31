@@ -174,10 +174,11 @@ class kivyScreenManager:
 
     def screen_key_event(self, direction, screen_obj):
         if direction == Button_Enum.RIGHT:
-            if len(screen_obj.button_keys[screen_obj.selected_pos[0]]) > screen_obj.selected_pos[
-                1] + 1:  # if it can move right
-                screen_obj.ids[
-                    screen_obj.button_keys[screen_obj.selected_pos[0]][screen_obj.selected_pos[1]]].state = 'normal'
+            if len(screen_obj.button_keys[screen_obj.selected_pos[0]]) \
+                    > screen_obj.selected_pos[1] + 1:  # if it can move right
+
+                screen_obj.ids[screen_obj.button_keys[screen_obj.selected_pos[0]][screen_obj.selected_pos[1]]].state \
+                    = 'normal'
                 screen_obj.selected_pos[1] += 1
             else:  # Cannot move right
                 screen_obj.ids[
@@ -394,7 +395,7 @@ class SettingsScreen(Screen):
     ip_address = StringProperty('IP: ')
 
 
-class DriveModeScreen(Screen):
+class  DriveModeScreen(Screen):
     selected_pos = [5, 0]  # y,x
     button_keys = [['Gearbox_Manual', 'Gearbox_Auto', 'Gearbox_Drag'],
                    ['Launch_D', 'Launch_OFF', 'Launch_1', 'Launch_2', 'Launch_3', 'Launch_4', 'Launch_5', 'Launch_6',
