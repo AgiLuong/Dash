@@ -146,9 +146,7 @@ class kivyScreenManager:
         elif name == 'SettingsScreen':
             self.current_screen = 'SettingsScreen'
             self.screen_obj = SettingsScreen
-        elif name == 'SetupScreen':
-            self.current_screen = 'SetupScreen'
-            self.screen_obj = SetupScreen
+
         screens.current = self.current_screen
         self.screen_obj.ids[self.screen_obj.button_keys[self.screen_obj.selected_pos[0]][
             self.screen_obj.selected_pos[1]]].state = 'down'
@@ -169,8 +167,6 @@ class kivyScreenManager:
             self.screen_key_event(direction=direction, screen_obj=DriveModeScreen)
         elif self.current_screen == 'SettingsScreen':
             self.screen_key_event(direction=direction, screen_obj=SettingsScreen)
-        elif self.current_screen == 'SetupScreen':
-            self.screen_key_event(direction=direction, screen_obj=SetupScreen)
 
     def screen_key_event(self, direction, screen_obj):
         if direction == Button_Enum.RIGHT:
@@ -274,51 +270,6 @@ global_rear_brake_pressure = 0.0
 global_brake_temperature = 0.0
 global_brake_ratio_text = ':'
 
-# Setup Screen Variables
-global_front_right_tire_pressure = 00.0
-global_front_right_cam = 0.0
-global_front_right_toe = 0.0
-global_front_right_press = 0.0
-
-global_front_left_tire_pressure = 00.0
-global_front_left_cam = 0.0
-global_front_left_toe = 0.0
-global_front_left_press = 0.0
-
-global_rear_right_tire_pressure = 00.0
-global_rear_right_cam = 0.0
-global_rear_right_toe = 0.0
-global_rear_right_press = 0.0
-
-global_rear_left_tire_pressure = 00.0
-global_rear_left_cam = 0.0
-global_rear_left_toe = 0.0
-global_rear_left_press = 0.0
-
-global_front_heave = 000
-global_front_heave_lsr = 0
-global_front_heave_lsc = 0
-global_front_heave_hsr = 0
-
-global_front_roll = 000
-global_front_roll_lsr = 0
-global_front_roll_lsc = 0
-global_front_roll_hsr = 0
-
-global_rear_heave = 000
-global_rear_heave_lsr = 0
-global_rear_heave_lsc = 0
-global_rear_heave_hsr = 0
-
-global_rear_roll = 000
-global_rear_roll_lsr = 0
-global_rear_roll_lsc = 0
-global_rear_roll_hsr = 0
-
-global_diff_preload = 000
-global_accel_ramp_ang = 00
-global_decel_ramp_ang = 00
-
 # Tune modes
 global_tune1 = -1
 global_tune2 = -1
@@ -410,71 +361,6 @@ class  DriveModeScreen(Screen):
     rear_ride_height = NumericProperty(0.0)
 
 
-class SetupScreen(Screen):
-    selected_pos = [0, 0]  # y,x
-    button_keys = [['Return', 'Tires', 'Heave', 'Roll', 'Diff']]
-
-    front_right_tire_pressure = NumericProperty(99.9)
-    front_right_cam = NumericProperty(9.9)
-    front_right_toe = NumericProperty(9.9)
-    front_right_press = NumericProperty(0.0)
-
-    front_left_tire_pressure = NumericProperty(99.9)
-    front_left_cam = NumericProperty(9.9)
-    front_left_toe = NumericProperty(9.9)
-    front_left_press = NumericProperty(0.0)
-
-    rear_right_tire_pressure = NumericProperty(99.9)
-    rear_right_cam = NumericProperty(9.9)
-    rear_right_toe = NumericProperty(9.9)
-    rear_right_press = NumericProperty(0.0)
-
-    rear_left_tire_pressure = NumericProperty(99.9)
-    rear_left_cam = NumericProperty(9.9)
-    rear_left_toe = NumericProperty(9.9)
-    rear_left_press = NumericProperty(0.0)
-
-    front_heave = NumericProperty(999)
-    front_heave_lsr = NumericProperty(9)
-    front_heave_lsc = NumericProperty(9)
-    front_heave_hsr = NumericProperty(9)
-
-    front_roll = NumericProperty(999)
-    front_roll_lsr = NumericProperty(9)
-    front_roll_lsc = NumericProperty(9)
-    front_roll_hsr = NumericProperty(9)
-
-    rear_heave = NumericProperty(999)
-    rear_heave_lsr = NumericProperty(9)
-    rear_heave_lsc = NumericProperty(9)
-    rear_heave_hsr = NumericProperty(9)
-
-    rear_roll = NumericProperty(999)
-    rear_roll_lsr = NumericProperty(9)
-    rear_roll_lsc = NumericProperty(9)
-    rear_roll_hsr = NumericProperty(9)
-
-    diff_preload = NumericProperty(999)
-    accel_ramp_ang = NumericProperty(99)
-    decel_ramp_ang = NumericProperty(99)
-
-
-class TireScreen(Screen):
-    pass
-
-
-class HeaveScreen(Screen):
-    pass
-
-
-class RollScreen(Screen):
-    pass
-
-
-class DiffScreen(Screen):
-    pass
-
-
 screens = ScreenManager(transition=NoTransition())
 screens.add_widget(MainScreen(name='MainScreen'))
 screens.add_widget(SuspensionScreen(name='SuspensionScreen'))
@@ -483,12 +369,6 @@ screens.add_widget(TrackScreen(name='TrackScreen'))
 screens.add_widget(DriveModeScreen(name='DriveModeScreen'))
 screens.add_widget(SettingsScreen(name='SettingsScreen'))
 
-screens.add_widget(SetupScreen(name="SetupScreen"))
-screens.add_widget(TireScreen(name="TireScreen"))
-screens.add_widget(HeaveScreen(name="HeaveScreen"))
-screens.add_widget(RollScreen(name="RollScreen"))
-screens.add_widget(DiffScreen(name="DiffScreen"))
-
 MainScreen = screens.get_screen('MainScreen')
 SuspensionScreen = screens.get_screen('SuspensionScreen')
 BrakeScreen = screens.get_screen('BrakeScreen')
@@ -496,11 +376,6 @@ TrackScreen = screens.get_screen('TrackScreen')
 DriveModeScreen = screens.get_screen('DriveModeScreen')
 SettingsScreen = screens.get_screen('SettingsScreen')
 
-SetupScreen = screens.get_screen('SetupScreen')
-TireScreen = screens.get_screen('TireScreen')
-HeaveScreen = screens.get_screen('HeaveScreen')
-RollScreen = screens.get_screen('RollScreen')
-DiffScreen = screens.get_screen('DiffScreen')
 
 # CanBus = can.ThreadSafeBus(interface='socketcan', channel='can0', bitrate=1000000)  # TODO
 
@@ -768,55 +643,6 @@ class main(App):
             BrakeScreen.rear_brake_pressure = global_rear_brake_pressure
             BrakeScreen.brake_temperature = global_brake_temperature
             BrakeScreen.brake_ratio_text = global_brake_ratio_text
-
-        elif screens.current_screen == SetupScreen:
-            SetupScreen.front_right_tire_pressure = global_front_right_tire_pressure
-            SetupScreen.front_right_cam = global_front_right_cam
-            SetupScreen.front_right_toe = global_front_right_toe
-            SetupScreen.front_right_press = global_front_right_press
-            SetupScreen.front_left_tire_pressure = global_front_left_tire_pressure
-            SetupScreen.front_left_cam = global_front_left_cam
-            SetupScreen.front_left_toe = global_front_left_toe
-            SetupScreen.front_left_press = global_front_left_press
-            SetupScreen.rear_right_tire_pressure = global_rear_right_tire_pressure
-            SetupScreen.rear_right_cam = global_rear_right_cam
-            SetupScreen.rear_right_toe = global_rear_right_toe
-            SetupScreen.rear_right_press = global_rear_right_press
-            SetupScreen.rear_left_tire_pressure = global_rear_left_tire_pressure
-            SetupScreen.rear_left_cam = global_rear_left_cam
-            SetupScreen.rear_left_toe = global_rear_left_toe
-            SetupScreen.rear_left_press = global_rear_left_press
-            SetupScreen.front_heave = global_front_heave
-            SetupScreen.front_heave_lsr = global_front_heave_lsr
-            SetupScreen.front_heave_lsc = global_front_heave_lsc
-            SetupScreen.front_heave_hsr = global_front_heave_hsr
-            SetupScreen.front_roll = global_front_roll
-            SetupScreen.front_roll_lsr = global_front_roll_lsr
-            SetupScreen.front_roll_lsc = global_front_roll_lsc
-            SetupScreen.front_roll_hsr = global_front_roll_hsr
-            SetupScreen.rear_heave = global_rear_heave
-            SetupScreen.rear_heave_lsr = global_rear_heave_lsr
-            SetupScreen.rear_heave_lsc = global_rear_heave_lsc
-            SetupScreen.rear_heave_hsr = global_rear_heave_hsr
-            SetupScreen.rear_roll = global_rear_roll
-            SetupScreen.rear_roll_lsr = global_rear_roll_lsr
-            SetupScreen.rear_roll_lsc = global_rear_roll_lsc
-            SetupScreen.rear_roll_hsr = global_rear_roll_hsr
-            SetupScreen.diff_preload = global_diff_preload
-            SetupScreen.accel_ramp_ang = global_accel_ramp_ang
-            SetupScreen.decel_ramp_ang = global_decel_ramp_ang
-
-        elif screens.current_screen == TireScreen:
-            pass
-
-        elif screens.current_screen == HeaveScreen:
-            pass
-
-        elif screens.current_screen == RollScreen:
-            pass
-
-        elif screens.current_screen == DiffScreen:
-            pass
 
     def on_start(self):
         Clock.schedule_interval(self.updateTime, 1)
