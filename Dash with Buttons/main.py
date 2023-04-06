@@ -277,7 +277,7 @@ global_tune2 = -1
 
 class MainScreen(Screen):
     selected_pos = [0, 0]  # y,x
-    button_keys = [['Drive_Mode', 'Brake', 'Suspension', 'Track', 'Setup']]
+    button_keys = [['Drive_Mode', 'Brake', 'Suspension', 'Track']]
 
     # Screen variables
     rpm = NumericProperty(0)
@@ -413,48 +413,6 @@ running_flag = True
 #     global global_rear_brake_pressure
 #     global global_brake_temperature
 #     global global_brake_ratio_text
-#
-#     # Setup Screen Variables
-#     global global_front_right_tire_pressure
-#     global global_front_right_cam
-#     global global_front_right_toe
-#     global global_front_right_press
-#     global global_front_left_tire_pressure
-#     global global_front_left_cam
-#     global global_front_left_toe
-#     global global_front_left_press
-#     global global_rear_right_tire_pressure
-#     global global_rear_right_cam
-#     global global_rear_right_toe
-#     global global_rear_right_press
-#     global global_rear_left_tire_pressure
-#     global global_rear_left_cam
-#     global global_rear_left_toe
-#     global global_rear_left_press
-#     global global_front_heave
-#     global global_front_heave_lsr
-#     global global_front_heave_lsc
-#     global global_front_heave_hsr
-#     global global_front_roll
-#     global global_front_roll_lsr
-#     global global_front_roll_lsc
-#     global global_front_roll_hsr
-#     global global_rear_heave
-#     global global_rear_heave_lsr
-#     global global_rear_heave_lsc
-#     global global_rear_heave_hsr
-#     global global_rear_roll
-#     global global_rear_roll_lsr
-#     global global_rear_roll_lsc
-#     global global_rear_roll_hsr
-#     global global_diff_preload
-#     global global_accel_ramp_ang
-#     global global_decel_ramp_ang
-#     global global_tune1
-#     global global_tune2
-#     global global_BSEA_status #added 5-23-21
-#     global global_APPSA_status #added 5-23-21
-#
 #
 #     BYTEORDER_CONSTANT = 'big'
 #
