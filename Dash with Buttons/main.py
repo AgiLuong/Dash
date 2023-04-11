@@ -117,7 +117,7 @@ class kivyScreenManager:
         self.current_screen = 'MainScreen'
         self.screen_obj = MainScreen
         self.reg_screens = ['MainScreen', 'SuspensionScreen', 'BrakeScreen',
-                            'TrackScreen', 'DriveModeScreen', 'SettingsScreen',
+                            'TrackScreen', 'SettingsScreen',
                             'SetupScreen']
         self.Fuel_level = 0
         self.Throttle_level = 0
@@ -140,9 +140,6 @@ class kivyScreenManager:
         elif name == 'TrackScreen':
             self.current_screen = 'TrackScreen'
             self.screen_obj = TrackScreen
-        elif name == 'DriveModeScreen':
-            self.current_screen = 'DriveModeScreen'
-            self.screen_obj = DriveModeScreen
         elif name == 'SettingsScreen':
             self.current_screen = 'SettingsScreen'
             self.screen_obj = SettingsScreen
@@ -163,8 +160,6 @@ class kivyScreenManager:
             self.screen_key_event(direction=direction, screen_obj=BrakeScreen)
         elif self.current_screen == 'TrackScreen':
             self.screen_key_event(direction=direction, screen_obj=TrackScreen)
-        elif self.current_screen == 'DriveModeScreen':
-            self.screen_key_event(direction=direction, screen_obj=DriveModeScreen)
         elif self.current_screen == 'SettingsScreen':
             self.screen_key_event(direction=direction, screen_obj=SettingsScreen)
 
@@ -277,7 +272,7 @@ global_tune2 = -1
 
 class MainScreen(Screen):
     selected_pos = [0, 0]  # y,x
-    button_keys = [['Drive_Mode', 'Brake', 'Suspension', 'Track']]
+    button_keys = [['Brake', 'Suspension', 'Track']]
 
     # Screen variables
     rpm = NumericProperty(0)
@@ -345,35 +340,17 @@ class SettingsScreen(Screen):
 
     ip_address = StringProperty('IP: ')
 
-
-class  DriveModeScreen(Screen):
-    selected_pos = [5, 0]  # y,x
-    button_keys = [['Gearbox_Manual', 'Gearbox_Auto', 'Gearbox_Drag'],
-                   ['Launch_D', 'Launch_OFF', 'Launch_1', 'Launch_2', 'Launch_3', 'Launch_4', 'Launch_5', 'Launch_6',
-                    'Launch_7', 'Launch_8', 'Launch_9'],
-                   ['Traction_D', 'Traction_OFF', 'Traction_1', 'Traction_2', 'Traction_3', 'Traction_4', 'Traction_5',
-                    'Traction_6', 'Traction_7', 'Traction_8', 'Traction_9'],
-                   ['Throttle_Normal', 'Throttle_Normal2', 'Throttle_Skipad', 'Throttle_Drag'],
-                   ['Fuel_A', 'Fuel_B', 'Fuel_C', 'Fuel_D'],
-                   ['Return']]
-
-    front_ride_height = NumericProperty(0.0)
-    rear_ride_height = NumericProperty(0.0)
-
-
 screens = ScreenManager(transition=NoTransition())
 screens.add_widget(MainScreen(name='MainScreen'))
 screens.add_widget(SuspensionScreen(name='SuspensionScreen'))
 screens.add_widget(BrakeScreen(name='BrakeScreen'))
 screens.add_widget(TrackScreen(name='TrackScreen'))
-screens.add_widget(DriveModeScreen(name='DriveModeScreen'))
 screens.add_widget(SettingsScreen(name='SettingsScreen'))
 
 MainScreen = screens.get_screen('MainScreen')
 SuspensionScreen = screens.get_screen('SuspensionScreen')
 BrakeScreen = screens.get_screen('BrakeScreen')
 TrackScreen = screens.get_screen('TrackScreen')
-DriveModeScreen = screens.get_screen('DriveModeScreen')
 SettingsScreen = screens.get_screen('SettingsScreen')
 
 
