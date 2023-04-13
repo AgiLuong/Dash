@@ -116,9 +116,7 @@ class kivyScreenManager:
     def __init__(self):
         self.current_screen = 'MainScreen'
         self.screen_obj = MainScreen
-        self.reg_screens = ['MainScreen', 'SuspensionScreen', 'BrakeScreen',
-                            'TrackScreen', 'SettingsScreen',
-                            'SetupScreen']
+        self.reg_screens = ['MainScreen', 'SuspensionScreen', 'SettingsScreen']
         self.Fuel_level = 0
         self.Throttle_level = 0
         self.Traction_level = 0
@@ -134,12 +132,6 @@ class kivyScreenManager:
         elif name == 'SuspensionScreen':
             self.current_screen = 'SuspensionScreen'
             self.screen_obj = SuspensionScreen
-        elif name == 'BrakeScreen':
-            self.current_screen = 'BrakeScreen'
-            self.screen_obj = BrakeScreen
-        elif name == 'TrackScreen':
-            self.current_screen = 'TrackScreen'
-            self.screen_obj = TrackScreen
         elif name == 'SettingsScreen':
             self.current_screen = 'SettingsScreen'
             self.screen_obj = SettingsScreen
@@ -156,10 +148,6 @@ class kivyScreenManager:
             self.screen_key_event(direction=direction, screen_obj=MainScreen)
         elif self.current_screen == 'SuspensionScreen':
             self.screen_key_event(direction=direction, screen_obj=SuspensionScreen)
-        elif self.current_screen == 'BrakeScreen':
-            self.screen_key_event(direction=direction, screen_obj=BrakeScreen)
-        elif self.current_screen == 'TrackScreen':
-            self.screen_key_event(direction=direction, screen_obj=TrackScreen)
         elif self.current_screen == 'SettingsScreen':
             self.screen_key_event(direction=direction, screen_obj=SettingsScreen)
 
@@ -245,26 +233,15 @@ global_battery_voltage = 0.0
 global_fuel_pressure = 0.0
 global_throttle_percent = 0
 global_clutch_percent = 0
-global_brake_percent = 0
 global_odo = 0
 global_tune_mode = 'Null'
-global_BOTS_status = False
 global_BSE_status = False
-global_BSPD_status = False
-global_TPS_status = False
-global_APPS_status = False
-global_APPSA_status = False
 global_BSEA_status = False
-global_front_heave = 0.0
-global_front_roll = 0.0
-global_rear_heave = 0.0
-global_rear_roll = 0.0
+global_front_left_wheel_speed = 0.0
+global_front_right_wheel_speed = 0.0
+global_front_left_lin_pot = 0.0
+global_front_right_lin_pot = 0.0
 global_steering_angle = 0
-global_front_brake_pressure = 0.0
-global_rear_brake_pressure = 0.0
-global_brake_temperature = 0.0
-global_brake_ratio_text = ':'
-
 # Tune modes
 global_tune1 = -1
 global_tune2 = -1
@@ -272,7 +249,7 @@ global_tune2 = -1
 
 class MainScreen(Screen):
     selected_pos = [0, 0]  # y,x
-    button_keys = [['Brake', 'Suspension', 'Track']]
+    button_keys = [['Suspension']]
 
     # Screen variables
     rpm = NumericProperty(0)
@@ -288,17 +265,11 @@ class MainScreen(Screen):
     fuel_pressure = NumericProperty(0.0)
     throttle_percent = NumericProperty(0)
     clutch_percent = NumericProperty(0)
-    brake_percent = NumericProperty(0)
     time_text = StringProperty(time.strftime("%H:%M"))
     odo = NumericProperty(0)
     tune_mode = StringProperty('Null')
-    BOTS_status = BooleanProperty(False)
     BSE_status = BooleanProperty(False)
-    BSPD_status = BooleanProperty(False)
-    TPS_status = BooleanProperty(False)
-    APPS_status = BooleanProperty(False)
     BSEA_status = BooleanProperty(False)
-    APPSA_status = BooleanProperty(False)
 
 
 class SuspensionScreen(Screen):
@@ -306,32 +277,11 @@ class SuspensionScreen(Screen):
     button_keys = [['Return']]
 
     # Screen variables
-    front_heave = NumericProperty(0.0)
-    front_roll = NumericProperty(0.0)
-    rear_heave = NumericProperty(0.0)
-    rear_roll = NumericProperty(0.0)
+    front_left_wheel_speed = NumericProperty(0.0) # front left wheel speed
+    front_right_wheel_speed = NumericProperty(0.0) # front right wheel speed
+    front_left_lin_pot = NumericProperty(0.0)
+    front_right_lin_pot = NumericProperty(0.0)
     steering_angle = NumericProperty(0)
-
-
-class BrakeScreen(Screen):
-    selected_pos = [0, 0]  # y,x
-    button_keys = [['Return']]
-
-    # Screen variables
-    front_brake_pressure = NumericProperty(0.0)
-    rear_brake_pressure = NumericProperty(0.0)
-    brake_temperature = NumericProperty(0.0)
-    brake_ratio_text = StringProperty(':')
-
-
-class TrackScreen(Screen):
-    selected_pos = [0, 0]  # y,x
-    button_keys = [['Return', 'Set_Beacon']]
-
-    current_latitude = NumericProperty(0.0000000)
-    current_longitude = NumericProperty(0.0000000)
-    beacon_latitude = NumericProperty(0.0000000)
-    beacon_longitude = NumericProperty(0.0000000)
 
 
 class SettingsScreen(Screen):
@@ -343,14 +293,10 @@ class SettingsScreen(Screen):
 screens = ScreenManager(transition=NoTransition())
 screens.add_widget(MainScreen(name='MainScreen'))
 screens.add_widget(SuspensionScreen(name='SuspensionScreen'))
-screens.add_widget(BrakeScreen(name='BrakeScreen'))
-screens.add_widget(TrackScreen(name='TrackScreen'))
 screens.add_widget(SettingsScreen(name='SettingsScreen'))
 
 MainScreen = screens.get_screen('MainScreen')
 SuspensionScreen = screens.get_screen('SuspensionScreen')
-BrakeScreen = screens.get_screen('BrakeScreen')
-TrackScreen = screens.get_screen('TrackScreen')
 SettingsScreen = screens.get_screen('SettingsScreen')
 
 
@@ -373,24 +319,14 @@ running_flag = True
 #     global global_fuel_pressure
 #     global global_throttle_percent
 #     global global_clutch_percent
-#     global global_brake_percent
 #     global global_odo
 #     global global_tune_mode
-#     global global_BOTS_status
 #     global global_BSE_status
-#     global global_BSPD_status
-#     global global_TPS_status
-#     global global_APPS_status
-#     global global_front_heave
-#     global global_front_roll
-#     global global_rear_heave
-#     global global_rear_roll
+#     global global_front_left_wheel_speed
+#     global global_front_right_wheel_speed
+#     global global_front_left_lin_pot
+#     global global_front_right_lin_pot
 #     global global_steering_angle
-#     global global_front_brake_pressure
-#     global global_rear_brake_pressure
-#     global global_brake_temperature
-#     global global_brake_ratio_text
-#
 #     BYTEORDER_CONSTANT = 'big'
 #
 #     while running_flag:
@@ -412,44 +348,26 @@ running_flag = True
 #                         global_steering_angle = int.from_bytes(msg.data[5:6], byteorder=BYTEORDER_CONSTANT, signed=True)
 #
 #                 elif msg.arbitration_id == 0x101:
-#                     global_front_brake_pressure = int.from_bytes(msg.data[0:2], byteorder=BYTEORDER_CONSTANT, signed=False) / 10.0
-#                     global_rear_brake_pressure = int.from_bytes(msg.data[2:4], byteorder=BYTEORDER_CONSTANT, signed=False) / 10.0
 #                     global_fuel_pressure = int.from_bytes(msg.data[4:6], byteorder=BYTEORDER_CONSTANT, signed=False) / 10.0
 #                     global_oil_pressure = int.from_bytes(msg.data[6:8], byteorder=BYTEORDER_CONSTANT, signed=False) / 10.0
-#
-#                     if screens.current_screen == MainScreen:
-#                         brake_percent_calculation = max(global_front_brake_pressure, global_rear_brake_pressure) / 10.0
-#                         global_brake_percent = brake_percent_calculation if brake_percent_calculation < 100 else 100
-#                     elif screens.current_screen == BrakeScreen:
-#                         total_brake_pressure = BrakeScreen.front_brake_pressure + BrakeScreen.rear_brake_pressure
-#                         if (total_brake_pressure > 0):
-#                             global_brake_ratio_text = str(round(BrakeScreen.front_brake_pressure*100.0/total_brake_pressure, 1)) + ' : ' + str(round(BrakeScreen.rear_brake_pressure*100.0/total_brake_pressure, 1))
-#                         else:
-#                             global_brake_ratio_text = ':'
 #
 #                 elif msg.arbitration_id == 0x102:
 #                     global_coolant_temperature = int.from_bytes(msg.data[0:2], byteorder=BYTEORDER_CONSTANT, signed=True) / 10.0
 #                     global_head_temperature = int.from_bytes(msg.data[2:4], byteorder=BYTEORDER_CONSTANT, signed=True) / 10.0
-#                     global_brake_temperature = int.from_bytes(msg.data[4:6], byteorder=BYTEORDER_CONSTANT, signed=True) / 10.0
 #                     global_battery_voltage = int.from_bytes(msg.data[6:7], byteorder=BYTEORDER_CONSTANT, signed=False) / 10.0
 #                     global_lambda_value = int.from_bytes(msg.data[7:8], byteorder=BYTEORDER_CONSTANT, signed=False) / 100.0
 #
 #                 elif msg.arbitration_id == 0x103:
-#                     global_front_heave = int.from_bytes(msg.data[0:2], byteorder=BYTEORDER_CONSTANT, signed=True) / 10.0
-#                     global_rear_heave = int.from_bytes(msg.data[2:4], byteorder=BYTEORDER_CONSTANT, signed=True) / 10.0
-#                     global_front_roll = int.from_bytes(msg.data[4:6], byteorder=BYTEORDER_CONSTANT, signed=True) / 10.0
-#                     global_rear_roll = int.from_bytes(msg.data[6:8], byteorder=BYTEORDER_CONSTANT, signed=True) / 10.0
+#                     global_front_left_wheel_speed = int.from_bytes(msg.data[0:2], byteorder=BYTEORDER_CONSTANT, signed=True) / 10.0
+#                     global_front_left_lin_pot = int.from_bytes(msg.data[2:4], byteorder=BYTEORDER_CONSTANT, signed=True) / 10.0
+#                     global_front_right_wheel_speed = int.from_bytes(msg.data[4:6], byteorder=BYTEORDER_CONSTANT, signed=True) / 10.0
+#                     global_front_right_lin_pot = int.from_bytes(msg.data[6:8], byteorder=BYTEORDER_CONSTANT, signed=True) / 10.0
 #
 #                 elif msg.arbitration_id == 0x104:
 #                     global_odo = int.from_bytes(msg.data[0:2], byteorder=BYTEORDER_CONSTANT, signed=False)
 #                     status = int.from_bytes(msg.data[2:3], byteorder=BYTEORDER_CONSTANT, signed=False)
-#                     global_BOTS_status = status & 0b10000000
 #                     global_BSE_status = status & 0b01000000
-#                     global_BSPD_status = status & 0b00100000
-#                     global_TPS_status = status & 0b00010000
-#                     global_APPS_status = status & 0b00001000
 #                     global_BSEA_status = status & 0b00000100 #added BAGR
-#                     global_APPSA_status = status & 0b00000010 #added AAGR
 #                     global_tune1 =  int.from_bytes(msg.data[3:4], byteorder = BYTEORDER_CONSTANT, signed = False) #added
 #                     global_tune2 = status & 0b00000001 #added changed
 #
@@ -501,8 +419,6 @@ class main(App):
     #         if func == 'ThrottleMap':
     #             msg = can.Message(arbitration_id = 0xFF, is_extended_id = False, data = [0,msg_data])
     #
-    #         elif func == 'SetBeacon':
-    #             msg = can.Message(arbitration_id = 0xFF, is_extended_id = False, data = [1])
     #
     #         elif func == 'RideHeight':
     #             msg = can.Message(arbitration_id = 0xFF, is_extended_id = False, data = [2] + list(struct.pack("!f", msg_data)))
@@ -555,29 +471,17 @@ class main(App):
             MainScreen.fuel_pressure = global_fuel_pressure
             MainScreen.throttle_percent = global_throttle_percent
             MainScreen.clutch_percent = global_clutch_percent
-            MainScreen.brake_percent = global_brake_percent
             MainScreen.odo = global_odo
             MainScreen.tune_mode = global_tune_mode
-            MainScreen.BOTS_status = global_BOTS_status
             MainScreen.BSE_status = global_BSE_status
-            MainScreen.BSPD_status = global_BSPD_status
-            MainScreen.TPS_status = global_TPS_status
-            MainScreen.APPS_status = global_APPS_status
-            MainScreen.APPSA_status = global_APPSA_status  # added 5-22-21
             MainScreen.BSEA_status = global_BSEA_status  # added 5-22-21
 
         elif screens.current_screen == SuspensionScreen:
-            SuspensionScreen.front_heave = global_front_heave
-            SuspensionScreen.front_roll = global_front_roll
-            SuspensionScreen.rear_heave = global_rear_heave
-            SuspensionScreen.rear_roll = global_rear_roll
+            SuspensionScreen.front_left_wheel_speed = global_front_left_wheel_speed
+            SuspensionScreen.front_right_wheel_speed = global_front_right_wheel_speed
+            SuspensionScreen.front_left_lin_pot = global_front_left_lin_pot
+            SuspensionScreen.front_right_lin_pot = global_front_right_lin_pot
             SuspensionScreen.steering_angle = global_steering_angle
-
-        elif screens.current_screen == BrakeScreen:
-            BrakeScreen.front_brake_pressure = global_front_brake_pressure
-            BrakeScreen.rear_brake_pressure = global_rear_brake_pressure
-            BrakeScreen.brake_temperature = global_brake_temperature
-            BrakeScreen.brake_ratio_text = global_brake_ratio_text
 
     def on_start(self):
         Clock.schedule_interval(self.updateTime, 1)

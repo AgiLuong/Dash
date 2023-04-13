@@ -34,10 +34,6 @@
             Color:
                 rgba: 1, 0, 0, 1
 
-            Rectangle:
-                size: 100, -4 * root.brake_percent      # bottem left rectangle 
-                pos: 440, 562
-
             Color:
                 rgba: 0, 0, 1, 1
             
@@ -250,28 +246,12 @@
             text: '15'
 
         Button:
-            size_hint: 0.33, 0.12
+            size_hint: 1, 0.12
             pos_hint: {"x":0,"y":0}
-            text: "Brake"
-            id: Brake
-            on_release:
-                app.kivy_manager.change_screen('BrakeScreen')
-
-        Button:
-            size_hint: 0.33, 0.12
-            pos_hint: {"x":0.33,"y":0}
             text: "Suspension"
             id: Suspension
             on_release:
                 app.kivy_manager.change_screen('SuspensionScreen')
-
-        Button:
-            size_hint: 0.33, 0.12
-            pos_hint: {"x":0.66,"y":0}
-            text: "Track"
-            id: Track
-            on_release:
-                app.kivy_manager.change_screen('TrackScreen')
 
         Button:
             size_hint: .2, 0.12 
@@ -287,32 +267,6 @@
             font_size: 60
             halign: 'left'
             text: "ODO " + str(root.odo)
-
-        Label:
-            size_hint: 0.08, 0.08
-            pos_hint: {"right":0.2,"top":1} #.84
-            font_size: 45
-            text: 'BSPD'
-
-            canvas.before:
-                Color:
-                    rgba: not root.BSPD_status, root.BSPD_status, 0, 1
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
-
-        Label:
-            size_hint: 0.08, 0.08
-            pos_hint: {"right":0.28,"top":1}
-            font_size: 45
-            text: 'BOTS'
-
-            canvas.before:
-                Color:
-                    rgba: not root.BOTS_status, root.BOTS_status, 0, 1
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
 
 
         Label:
@@ -354,155 +308,6 @@
                     size: self.size
                     pos: self.pos
 
-
-        
-        Label:
-            size_hint: 0.08, 0.08 #(width_proportion, height_proportion)
-            pos_hint: {"right":0.76,"top":1} #.92
-            font_size: 45
-            text: 'TPS'
-            
-            canvas.before:
-                Color:
-                    rgba: root.TPS_status, not root.TPS_status, 0, 1
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
-
-        Label:
-            size_hint: 0.08, 0.08
-            pos_hint: {"right":.84,"top":1} #1
-            font_size: 45
-            text: 'APPS'
-            
-            canvas.before:
-                Color:
-                    rgba: root.APPS_status, not root.APPS_status, 0, 1
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
-        
-        Label:
-            size_hint: 0.08, 0.08
-            pos_hint: {"right":.92,"top":1}
-            font_size: 45
-            text: 'BAGR'
-            
-            canvas.before:
-                Color:
-                    rgba: not root.BSEA_status, root.BSEA_status, 0, 1
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
-            
-
-        Label:
-            size_hint: 0.08, 0.08
-            pos_hint: {"right":1,"top":1}
-            font_size: 45
-            text: 'AAGR'
-            
-            canvas.before:
-                Color:
-                    rgba: not root.APPSA_status, root.APPSA_status, 0, 1
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
-
-
-
-
-
-<BrakeScreen>:
-
-    FloatLayout:
-        size: root.width, root.height
-
-        # BoxLayout:
-        #     orientation: 'vertical'
-        #     size_hint: 0.2, 0.1
-        #     pos_hint: {"x":0.4,"top":1}
-        #     Label:
-        #         font_size: 100
-        #         text: str(root.brake_temperature)
-
-        #     Label:
-        #         size_hint: 1, 0.2
-        #         font_size: 20
-        #         text: 'Brake Temp (F)'
-        #         canvas:
-        #             Color:
-        #                 rgba: 1, 1, 1, 0.1
-        #             Rectangle:
-        #                 size: self.size
-        #                 pos: self.pos
-
-        BoxLayout:
-            orientation: 'vertical'
-            size_hint: 0.35, 0.3
-            pos_hint: {"x":0.1,"top":0.9}
-            Label:
-                font_size: 250
-                text: str(root.front_brake_pressure)
-
-            Label:
-                size_hint: 1, 0.2
-                font_size: 50
-                text: 'Front Brake Pressure (PSI)'
-                canvas:
-                    Color:
-                        rgba: 1, 1, 1, 0.1
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
-
-        BoxLayout:
-            orientation: 'vertical'
-            size_hint: 0.35, 0.3
-            pos_hint: {"right":0.9,"top":0.9}
-            Label:
-                font_size: 250
-                text: str(root.rear_brake_pressure)
-
-            Label:
-                size_hint: 1, 0.2
-                font_size: 50
-                text: 'Rear Brake Pressure (PSI)'
-                canvas:
-                    Color:
-                        rgba: 1, 1, 1, 0.1
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
-
-        BoxLayout:
-            orientation: 'vertical'
-            size_hint: 0.8, 0.3
-            pos_hint: {"center_x":0.5,"y":0.2}
-            Label:
-                font_size: 300
-                text: root.brake_ratio_text
-
-            Label:
-                size_hint: 1, 0.2
-                font_size: 50
-                text: 'F:R Ratio (%)'
-                canvas:
-                    Color:
-                        rgba: 1, 1, 1, 0.1
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
-
-        Button:
-            size_hint: 1, 0.12
-            pos_hint: {"x":0,"y":0}
-            text: "Return"
-            id: Return
-            on_release:
-                app.kivy_manager.change_screen('MainScreen')
-
-
 <SuspensionScreen>:
 
     FloatLayout:
@@ -536,12 +341,12 @@
             pos_hint: {"x":0.1,"top":0.9}
             Label:
                 font_size: 300
-                text: str(root.front_heave)
+                text: str(root.front_left_wheel_speed)
 
             Label:
                 size_hint: 1, 0.2
                 font_size: 50
-                text: 'Front Heave (mm)'
+                text: 'Front-left wheel speed'
                 canvas:
                     Color:
                         rgba: 1, 1, 1, 0.1
@@ -555,12 +360,12 @@
             pos_hint: {"right":0.9,"top":0.9}
             Label:
                 font_size: 300
-                text: str(root.front_roll)
+                text: str(root.front_right_wheel_speed)
 
             Label:
                 size_hint: 1, 0.2
                 font_size: 50
-                text: 'Front Roll (mm)'
+                text: 'Front-right wheel speed'
                 canvas:
                     Color:
                         rgba: 1, 1, 1, 0.1
@@ -574,12 +379,12 @@
             pos_hint: {"x":0.1,"y":0.2}
             Label:
                 font_size: 300
-                text: str(root.rear_heave)
+                text: str(root.front_left_lin_pot)
 
             Label:
                 size_hint: 1, 0.2
                 font_size: 50
-                text: 'Rear Heave (mm)'
+                text: 'Front Left Lin Pot'
                 canvas:
                     Color:
                         rgba: 1, 1, 1, 0.1
@@ -593,12 +398,12 @@
             pos_hint: {"right":0.9,"y":0.2}
             Label:
                 font_size: 300
-                text: str(root.rear_roll)
+                text: str(root.front_right_lin_pot)
 
             Label:
                 size_hint: 1, 0.2
                 font_size: 50
-                text: 'Rear Roll (mm)'
+                text: 'Front_right_lin_pot'
                 canvas:
                     Color:
                         rgba: 1, 1, 1, 0.1
@@ -613,103 +418,6 @@
             id: Return
             on_release:
                 app.kivy_manager.change_screen('MainScreen')
-
-<TrackScreen>:
-
-    FloatLayout:
-        size: root.width, root.height
-
-        Button:
-            size_hint: 0.5, 0.12
-            pos_hint: {"x":0,"y":0}
-            text: "Return"
-            id: Return
-            on_release:
-                app.kivy_manager.change_screen('MainScreen')
-        
-        Button:
-            size_hint: 0.5, 0.12
-            pos_hint: {"x":0.5,"y":0}
-            text: "Set Beacon"
-            id: Set_Beacon
-            on_release:
-                app.sendCanMsg('SetBeacon',0)
-        
-        BoxLayout:
-            orientation: 'vertical'
-            size_hint: 0.35, 0.3
-            pos_hint: {"x":0.1,"top":0.9}
-            Label:
-                font_size: 100
-                text: "{:.7f}".format(root.current_latitude)
-
-            Label:
-                size_hint: 1, 0.2
-                font_size: 50
-                text: 'Current Latitude'
-                canvas:
-                    Color:
-                        rgba: 1, 1, 1, 0.1
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
-
-        BoxLayout:
-            orientation: 'vertical'
-            size_hint: 0.35, 0.3
-            pos_hint: {"right":0.9,"top":0.9}
-            Label:
-                font_size: 100
-                text: "{:.7f}".format(root.current_longitude)
-
-            Label:
-                size_hint: 1, 0.2
-                font_size: 50
-                text: 'Current Longitude'
-                canvas:
-                    Color:
-                        rgba: 1, 1, 1, 0.1
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
-
-        BoxLayout:
-            orientation: 'vertical'
-            size_hint: 0.35, 0.3
-            pos_hint: {"x":0.1,"y":0.2}
-            Label:
-                font_size: 100
-                text: "{:.7f}".format(root.beacon_latitude)
-
-            Label:
-                size_hint: 1, 0.2
-                font_size: 50
-                text: 'Beacon Latitude'
-                canvas:
-                    Color:
-                        rgba: 1, 1, 1, 0.1
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
-
-        BoxLayout:
-            orientation: 'vertical'
-            size_hint: 0.35, 0.3
-            pos_hint: {"right":0.9,"y":0.2}
-            Label:
-                font_size: 100
-                text: "{:.7f}".format(root.beacon_longitude)
-
-            Label:
-                size_hint: 1, 0.2
-                font_size: 50
-                text: 'Beacon Longitude'
-                canvas:
-                    Color:
-                        rgba: 1, 1, 1, 0.1
-                    Rectangle:
-                        size: self.size
-                        pos: self.pos
 
 <SettingsScreen>:
 
